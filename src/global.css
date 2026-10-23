@@ -1,0 +1,5 @@
+html, body { margin: 0; padding: 0; }
+body { overflow-x: hidden; background: #F7F4EC; -webkit-text-size-adjust: 100%; }
+#root { width: 100%; }
+.board-slot { display: block; width: 100%; overflow: hidden; }
+.board-zoom { transform-origin: 0 0; }
