@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import ResponsivePage from './components/ResponsivePage.jsx';
 import { usePath } from './router.js';
+import { preferredLanguage } from './language.js';
 import homeHero from './boards/home-hero.js';
 import homeWorks from './boards/home-works.js';
 import homeFooter from './boards/home-footer.js';
@@ -68,6 +69,28 @@ const ROUTES = {
 
 // Older URL for the Japanese case study, kept so existing links still work.
 ROUTES['/works/muse/ja'] = ROUTES['/works/muse'];
+
+// The same page in the other language, if it exists.
+function counterpart(path, lang) {
+  if (lang === 'en') {
+    const p = path === '/works/muse/ja' ? '/works/muse' : path;
+    const en = p === '/' ? '/en' : '/en' + p;
+    return ROUTES[en] ? en : null;
+  }
+  const ja = path === '/en' ? '/' : path.replace(/^\/en(?=\/)/, '');
+  return ROUTES[ja] ? ja : null;
+}
+
+// On the first page load, show the page in the preferred language (English by default).
+function redirectToPreferredLanguage() {
+  const path = window.location.pathname.length > 1 ? window.location.pathname.replace(/\/+$/, '') : window.location.pathname;
+  const route = ROUTES[path];
+  const want = preferredLanguage();
+  if (!route || route.lang === want) return;
+  const target = counterpart(path, want);
+  if (target) window.history.replaceState({}, '', target + window.location.search + window.location.hash);
+}
+redirectToPreferredLanguage();
 
 export default function App() {
   const raw = usePath();

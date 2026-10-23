@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { navigate, handleInPageHash } from '../router.js';
+import { rememberLanguage } from '../language.js';
 
 /**
  * Renders one design board exactly as authored: its original markup and CSS are
@@ -21,6 +22,8 @@ export default function Board({ board }) {
       if (href.startsWith('mailto:') || href.startsWith('http')) return;
       if (href.startsWith('/')) {
         e.preventDefault();
+        const lang = a.getAttribute('hreflang');
+        if (lang) rememberLanguage(lang);
         navigate(href);
       } else if (href.startsWith('#')) {
         e.preventDefault();
