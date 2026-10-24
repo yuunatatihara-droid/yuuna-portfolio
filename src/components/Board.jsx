@@ -16,8 +16,14 @@ export default function Board({ board }) {
     root.innerHTML = `<style>:host{display:block}*{-webkit-tap-highlight-color:transparent}${board.css}</style>${board.html}`;
 
     const onClick = (e) => {
-      const a = e.composedPath().find((n) => n.tagName === 'A');
-      if (!a) return;
+      const path = e.composedPath();
+      const a = path.find((n) => n.tagName === 'A');
+      if (!a) {
+        // A larger click area (e.g. a whole project frame) can point at a page with data-href.
+        const area = path.find((n) => n.dataset?.href);
+        if (area) navigate(area.dataset.href);
+        return;
+      }
       const href = a.getAttribute('href') || '';
       if (href.startsWith('mailto:') || href.startsWith('http')) return;
       if (href.startsWith('/')) {
