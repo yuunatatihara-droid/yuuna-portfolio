@@ -60,7 +60,7 @@ export default {
 - **Maple Nest のボードは手で編集しない。** 文章は `tools/maplenest/content.mjs`（EN/JA）、追加 CSS は `tools/maplenest/styles.css`、構造は `tools/maplenest/build.mjs` を直して `node tools/maplenest/build.mjs` で再生成する。ベース CSS は MUSE のボードから取っている（MUSE の CSS を変えると Maple Nest にも影響する）。
 - `tools/lang-switch.mjs`: 言語切り替えの HTML（全ページ共通のデザイン）。
 - `tools/about-hero.mjs`: About のヒーロー（レースの上の手紙・封蝋・星、プロフィール写真のピンクの蔓フレーム）を JA/EN・PC/スマホに書き込む。ヒーロー部分と追加 CSS を置き換えるので何度でも再実行できる。文章はボード内の既存の文言を引き継ぐ。
-- `tools/about-skills.mjs`: About の Skills の3枚（01 ピンクの切手、02 ポストカード＋消印、03 セージの切手、それぞれクリップ付き）を同じ要領で書き込む。項目は既存のボードから読み取る。
+- `tools/about-skills.mjs`: About の Skills の3枚（01 ピンクの切手、02 ポストカード＋消印、03 セージの切手、それぞれクリップ付き）を同じ要領で書き込む。項目は既存のボードから読み取る。**ハート型や「Postcard」「Love, Yuuna」「YUUNA」など内容に関係ない文字は入れない**（ユーザーの指示）。
 - `tools/project-motion.mjs`: ケーススタディのスクロール演出 CSS・reveal 設定・タイトル文字分割（MUSE と Maple Nest で共通）。
 
 ## 演出（現状）
