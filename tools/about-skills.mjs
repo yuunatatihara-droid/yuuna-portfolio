@@ -1,5 +1,5 @@
 // Rebuilds the three About page Skills cards (JA + EN, desktop + mobile) as stationery:
-// 01 a pink postage stamp, 02 a postcard with a mini stamp and postmark, 03 a sage stamp,
+// 01 a pink postage stamp, 02 a plain postcard, 03 a sage stamp,
 // each held by a clip (gold paperclip, white polka-dot clamp, silver star paperclip). No extra lettering.
 // The card titles and list items are read from the board, so re-running it is safe.
 //   node tools/about-skills.mjs
@@ -27,13 +27,10 @@ const clips = {
   paperclip: (id, w, style, metal = GOLD) => `<svg class="clip" aria-hidden="true" viewBox="-2 -2 32 82" width="${w}" height="${Math.round(w * 82 / 32)}" style="${style}"><defs>${metal.replace(/__[gs]/, id)}</defs><path d="${WIRE}" fill="none" stroke="url(#${id})" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   clamp: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="0 0 120 74" width="${w}" height="${Math.round(w * 74 / 120)}" style="${style}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#F6F3EF"/><stop offset="1" stop-color="#E4DED8"/></linearGradient><pattern id="${id}d" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.6" fill="#E46F8A"/><circle cx="10.5" cy="10.5" r="2.6" fill="#E46F8A"/></pattern></defs><g stroke="#E2DCD5" stroke-width="1"><path fill-rule="evenodd" d="${TAB}" fill="url(#${id})"/><rect x="4" y="32" width="112" height="30" rx="6" fill="url(#${id})"/></g><path fill-rule="evenodd" d="${TAB}" fill="url(#${id}d)"/><rect x="4" y="32" width="112" height="30" rx="6" fill="url(#${id}d)"/><rect x="4" y="58" width="112" height="9" rx="3" fill="#DCD5CE"/><rect x="10" y="35" width="100" height="3" rx="1.5" fill="#FFFFFF" opacity=".8"/></svg>`,
   // a paperclip topped with a puffy silver star (reference photo)
-  star: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="-10 -20 48 100" width="${w}" height="${Math.round(w * 100 / 48)}" style="${style}"><defs>${SILVER.replace('__s', id)}<radialGradient id="${id}r" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#DADEE4"/><stop offset="1" stop-color="#9EA6B1"/></radialGradient></defs><path d="${WIRE}" fill="none" stroke="url(#${id})" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="url(#${id}r)" stroke="url(#${id}r)" stroke-width="6" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="none" stroke="#A9B0BA" stroke-width="1" stroke-linejoin="round" opacity=".6" transform="translate(0 .6)"/><ellipse cx="8" cy="-6" rx="4" ry="2.4" fill="#FFFFFF" opacity=".85" transform="rotate(-30 8 -6)"/><g fill="#8C939D" opacity=".75"><circle cx="10.5" cy="3" r="1.1"/><circle cx="17.5" cy="3" r="1.1"/><circle cx="4" cy="5" r=".8"/><circle cx="24" cy="5" r=".8"/></g><path d="M12.2 6.4q1.8 1.6 3.6 0" fill="none" stroke="#8C939D" stroke-width=".9" stroke-linecap="round" opacity=".75"/></svg>`,
+  star: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="-10 -20 48 100" width="${w}" height="${Math.round(w * 100 / 48)}" style="${style}"><defs>${SILVER.replace('__s', id)}<radialGradient id="${id}r" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#DADEE4"/><stop offset="1" stop-color="#9EA6B1"/></radialGradient></defs><path d="${WIRE}" fill="none" stroke="url(#${id})" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="url(#${id}r)" stroke="url(#${id}r)" stroke-width="6" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="none" stroke="#A9B0BA" stroke-width="1" stroke-linejoin="round" opacity=".6" transform="translate(0 .6)"/><ellipse cx="8" cy="-6" rx="4" ry="2.4" fill="#FFFFFF" opacity=".85" transform="rotate(-30 8 -6)"/></svg>`,
 };
 
 // ---------- small pieces ----------
-const postmark = (w, style) => `<svg class="pc-mark" aria-hidden="true" viewBox="0 0 120 56" width="${w}" height="${Math.round(w * 56 / 120)}" style="${style}"><g fill="none" stroke="#B65A72" stroke-width="1.6" stroke-linecap="round" opacity=".7">${[14, 24, 34, 44].map((y) => `<path d="M2 ${y}q6-5 12 0t12 0t12 0t12 0t12 0"/>`).join('')}<circle cx="92" cy="28" r="23"/><circle cx="92" cy="28" r="16" stroke-width="1"/></g></svg>`;
-
-const miniStamp = (style) => `<div class="pc-frame pc-mini" aria-hidden="true" style="${style}"><svg viewBox="0 0 40 48" preserveAspectRatio="none"><defs><linearGradient id="msky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9EC9E8"/><stop offset="1" stop-color="#DCEEF8"/></linearGradient></defs><rect width="40" height="48" fill="url(#msky)"/><circle cx="29" cy="13" r="5" fill="#F6EFC4"/><path d="M0 36q10-9 20-3t20-4V48H0Z" fill="#8DB58A"/><path d="M0 41q12-6 24-1t16-2V48H0Z" fill="#5E8A5C"/><g fill="#F28AA6"><circle cx="9" cy="39" r="1.6"/><circle cx="15" cy="42" r="1.4"/><circle cx="31" cy="40" r="1.6"/></g></svg></div>`;
 
 // ---------- markup ----------
 function card(c, i, mobile) {
@@ -47,8 +44,6 @@ function card(c, i, mobile) {
         ${num}
         <h3 class="sk-h">${c.title}</h3>
         ${list}
-        ${miniStamp(mobile ? 'right: 14px; top: 12px;' : 'right: 18px; top: 14px;')}
-        ${postmark(mobile ? 78 : 96, mobile ? 'right: 52px; top: 16px;' : 'right: 64px; top: 20px;')}
         </div></div>
         ${clips.clamp(`clamp${mobile ? 'm' : ''}`, mobile ? 112 : 140, `left: 50%; top: ${mobile ? -40 : -50}px; margin-left: -${mobile ? 56 : 70}px; rotate: -3deg;`)}
       </div>`;
@@ -73,8 +68,8 @@ const PAPER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
 
 function css(mobile) {
   const k = mobile
-    ? { g: 18, r: 5, pad: 11, post: 10, in: '24px 22px 26px', mini: [40, 48], mg: 8, mr: 2.4, mp: 5, script: 26, sign: 24 }
-    : { g: 22, r: 6, pad: 13, post: 12, in: '30px 30px 32px', mini: [48, 58], mg: 9, mr: 2.8, mp: 6, script: 30, sign: 28 };
+    ? { g: 18, r: 5, pad: 11, post: 10, in: '24px 22px 26px' }
+    : { g: 22, r: 6, pad: 13, post: 12, in: '30px 30px 32px' };
   // Perforation: holes at every tile corner (two layers intersected so the right and bottom edges
   // get holes too), then the content box added back so only the edge row of holes shows.
   const perf = (g, r) => `radial-gradient(circle ${r}px at 0 0,#0000 98%,#000) 0 0/${g}px ${g}px round border-box,radial-gradient(circle ${r}px at 100% 100%,#0000 98%,#000) 0 0/${g}px ${g}px round border-box`;
@@ -99,9 +94,6 @@ function css(mobile) {
 .pc-sage .sk-list li::before{color:#5E8A5C}
 .pc .sk-list li.add{min-height:0;margin-top:14px;border:2px dashed #2F77CC;border-radius:12px;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:8px 16px;font-size:14px;color:#1F3B24}
 .pc .sk-list li.add::before{display:none}
-.pc-mini{position:absolute;width:${k.mini[0]}px;height:${k.mini[1]}px;padding:${k.mp}px;background:#FFFFFF;rotate:4deg;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18));-webkit-mask:linear-gradient(#000 0 0) content-box,${perf(k.mg, k.mr)};-webkit-mask-composite:source-over,source-in;mask:linear-gradient(#000 0 0) content-box,${perf(k.mg, k.mr)};mask-composite:add,intersect}
-.pc-mini svg{display:block;width:100%;height:100%}
-.pc-mark{position:absolute;pointer-events:none;rotate:-8deg}
 .clip{position:absolute;z-index:2;overflow:visible;filter:drop-shadow(1px 3px 2px rgba(40,40,40,.28))}
 ${CSS_END}`;
 }
