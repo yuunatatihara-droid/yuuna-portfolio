@@ -59,6 +59,7 @@ export default {
 - css / html は JSON 文字列（`\"` や `\n` がエスケープされている）。**sed で直接書き換えると失敗しやすい**ので、Node で `import()` して文字列を置換し、同じ形で書き戻すのが確実。
 - **Maple Nest のボードは手で編集しない。** 文章は `tools/maplenest/content.mjs`（EN/JA）、追加 CSS は `tools/maplenest/styles.css`、構造は `tools/maplenest/build.mjs` を直して `node tools/maplenest/build.mjs` で再生成する。ベース CSS は MUSE のボードから取っている（MUSE の CSS を変えると Maple Nest にも影響する）。
 - `tools/lang-switch.mjs`: 言語切り替えの HTML（全ページ共通のデザイン）。
+- `tools/about-hero.mjs`: About のヒーロー（レースの上の手紙・封蝋・星、プロフィール写真のピンクの蔓フレーム）を JA/EN・PC/スマホに書き込む。ヒーロー部分と追加 CSS を置き換えるので何度でも再実行できる。文章はボード内の既存の文言を引き継ぐ。
 - `tools/project-motion.mjs`: ケーススタディのスクロール演出 CSS・reveal 設定・タイトル文字分割（MUSE と Maple Nest で共通）。
 
 ## 演出（現状）
