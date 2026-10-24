@@ -31,7 +31,29 @@ export default function Board({ board }) {
       }
     };
     root.addEventListener('click', onClick);
-    return () => root.removeEventListener('click', onClick);
+
+    // Elements marked data-reveal get the class "in" once they scroll into view (boards animate on it).
+    const reveal = root.querySelectorAll('[data-reveal]');
+    let io;
+    if (reveal.length && 'IntersectionObserver' in window) {
+      io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+        // Hidden-state styles (clip-path, scale 0) make the visible ratio 0, so trigger on any overlap
+        // with the viewport minus its bottom 15% instead of on a ratio.
+      }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
+      reveal.forEach((el) => io.observe(el));
+    } else {
+      reveal.forEach((el) => el.classList.add('in'));
+    }
+
+    return () => {
+      root.removeEventListener('click', onClick);
+      io?.disconnect();
+    };
   }, [board]);
 
   return <div ref={hostRef} style={{ width: board.width }} />;
