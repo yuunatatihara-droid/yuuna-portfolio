@@ -211,7 +211,7 @@ function css(mobile) {
 .lt-p1,.lt-p2,.lt-p3{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,sans-serif;line-break:strict}
 .lt-p1{font-weight:700;font-size:${k.p1}px;line-height:1.7;color:#1F3B24}
 .lt-p2{font-weight:600;font-size:${k.p2}px;line-height:1.8}
-.lt-p3{font-size:${k.p3}px;line-height:1.8;color:#5B5B55}
+.lt-p3{font-weight:500;font-size:${k.p3}px;line-height:1.8;color:#2F3A30}
 .seal{position:absolute;filter:drop-shadow(1px 3px 2px rgba(60,40,50,.3))}
 .lt-star{position:absolute;z-index:2;filter:drop-shadow(0 1px 1px rgba(40,50,20,.25));animation:st-tw 4.6s ease-in-out infinite}
 @keyframes st-tw{0%,100%{scale:1}50%{scale:.8}}

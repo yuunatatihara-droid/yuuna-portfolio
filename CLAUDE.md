@@ -70,7 +70,6 @@ export default {
 - ケーススタディ: 見出しやカードがスクロールで現れる、アンケートの棒が伸びる、ヒーローの選択枠、タイトル文字の登場とホバー。**スマホ画面（モックアップ）は動かさない**（ユーザーの指示）。
 
 ## 未完成・確認待ちの項目
-- About: 自己紹介の追加1文が仮置き（「[ここに自己紹介をもう一言…]」/「[One more line about yourself…]」）。
 - MUSE の振り返り3枠が仮置き（「[Add — connect to a specific decision or experience]」/「[追加予定 — …]」）。
 - メールアドレス `yuuna.tatihara@gmail.com` の綴り（名前は Tachihara）が正しいか未確認。
 - Maple Nest の担当範囲・期間（2026年6月〜9月）・振り返りの文面はスライドからの推測。本人の確認待ち。
