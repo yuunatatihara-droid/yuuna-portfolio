@@ -36,6 +36,9 @@ function restyle(html) {
   for (const [a, b] of swaps) html = html.split(a).join(b);
   // the Figma selection frame around the nested program
   html = html.replace(/\n *<div class="sel" style="inset: -?\d+px;"><i><\/i><i><\/i><i><\/i><i><\/i>(<b>[^<]*<\/b>)?<\/div>(?=\n *<span class="jr-chip">)/g, '');
+  // the empty "next chapter" stop after the last card, and the line that led down to it
+  html = html.replace(/\n\n *<!-- next chapter -->\n *<li>\s*<span class="jr-hdl" aria-hidden="true"><\/span>\s*<\/li>/, '');
+  html = html.replace(/(<!-- Study abroad[^>]*-->\n *<li>\n *<span class="jr-hdl" aria-hidden="true"><\/span>)\n *<svg class="jr-line"[\s\S]*?<\/svg>/, '$1');
   // stamps: real perforated stamps (Japan flag, maple leaf)
   html = html.replace(/<svg class="jr-stamp"[^>]*style="transform: rotate\((-?\d+)deg\);">[\s\S]*?<\/svg>/g, (m, rot) => stamp(m.includes('<circle') ? 'jp' : 'ca', rot));
   return html;
