@@ -51,7 +51,10 @@ function css(mobile) {
     ? { frame: 9, stamp: [44, 52], sp: 4, g: 8, r: 2.3, stitch: 7 }
     : { frame: 12, stamp: [64, 76], sp: 6, g: 10, r: 2.8, stitch: 9 };
   const perf = `radial-gradient(circle ${k.r}px at 0 0,#0000 98%,#000) 0 0/${k.g}px ${k.g}px round border-box,radial-gradient(circle ${k.r}px at 100% 100%,#0000 98%,#000) 0 0/${k.g}px ${k.g}px round border-box`;
+  // The line is an absolutely positioned SVG, which keeps its 100px intrinsic height unless given
+  // one: stretch it from the stop's top offset to the next card's stop (the base CSS's bottom).
   return `${CSS_START}
+.jr-line{height:calc(100% + ${mobile ? 28 : 36}px)}
 .jr-hdl{border-radius:50%;background:#F2C3CC;border:2px solid #FFFFFF;box-shadow:0 0 0 1.5px #D88C9A}
 .jr-tape{background-color:#F2C3CC;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.4) 0 4px,transparent 4px 10px);box-shadow:0 6px 10px -8px rgba(0,0,0,.4)}
 .jr-t-sage{background-color:#C9E0C0}
