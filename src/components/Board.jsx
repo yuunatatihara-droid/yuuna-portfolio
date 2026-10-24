@@ -32,27 +32,45 @@ export default function Board({ board }) {
     };
     root.addEventListener('click', onClick);
 
-    // Elements marked data-reveal get the class "in" once they scroll into view (boards animate on it).
-    const reveal = root.querySelectorAll('[data-reveal]');
-    let io;
-    if (reveal.length && 'IntersectionObserver' in window) {
-      io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-        // Hidden-state styles (clip-path, scale 0) make the visible ratio 0, so trigger on any overlap
-        // with the viewport minus its bottom 15% instead of on a ratio.
-      }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
-      reveal.forEach((el) => io.observe(el));
-    } else {
-      reveal.forEach((el) => el.classList.add('in'));
+    // A board can list selectors to animate in (board.reveal: { kind: selector }); each match is tagged
+    // data-reveal="kind", skipping anything inside or around an element that is already tagged.
+    for (const [kind, selector] of Object.entries(board.reveal || {})) {
+      root.querySelectorAll(selector).forEach((el) => {
+        if (el.closest('[data-reveal]') || el.querySelector('[data-reveal]')) return;
+        el.setAttribute('data-reveal', kind);
+      });
+    }
+
+    // Elements marked data-reveal get the class "in" once their top passes 85% of the viewport height
+    // (boards animate on it). Checking on scroll, rather than with an IntersectionObserver, also
+    // catches elements that a fast scroll carries past the viewport between frames.
+    let pending = [...root.querySelectorAll('[data-reveal]')];
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.85;
+      pending = pending.filter((el) => {
+        if (el.getBoundingClientRect().top >= line) return true;
+        el.classList.add('in');
+        return false;
+      });
+      if (!pending.length) stop();
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(check); };
+    const stop = () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+    if (pending.length) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      check();
     }
 
     return () => {
       root.removeEventListener('click', onClick);
-      io?.disconnect();
+      stop();
     };
   }, [board]);
 
