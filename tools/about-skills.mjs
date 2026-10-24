@@ -1,6 +1,6 @@
 // Rebuilds the three About page Skills cards (JA + EN, desktop + mobile) as stationery:
 // 01 a pink postage stamp, 02 a postcard with a mini stamp and postmark, 03 a sage stamp,
-// each held by a clip (gold paperclip, pink clamp, silver paperclip). No extra lettering.
+// each held by a clip (gold paperclip, white polka-dot clamp, silver star paperclip). No extra lettering.
 // The card titles and list items are read from the board, so re-running it is safe.
 //   node tools/about-skills.mjs
 import { readFile, writeFile } from 'node:fs/promises';
@@ -17,9 +17,17 @@ const GOLD = '<linearGradient id="__g" x1="0" y1="0" x2="1" y2="0"><stop offset=
 const SILVER = '<linearGradient id="__s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9AA1AB"/><stop offset=".45" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#C5CBD3"/><stop offset="1" stop-color="#8C939D"/></linearGradient>';
 const WIRE = 'M10 24V58a5 5 0 0 0 10 0V13a8.5 8.5 0 0 0-17 0V62a11 11 0 0 0 22 0V30';
 
+const TAB = 'M46 2h28a8 8 0 0 1 8 8v28H38V10a8 8 0 0 1 8-8ZM60 8a6.5 6.5 0 1 0 .01 0Z';
+const STAR5 = (cx, cy, R, r) => Array.from({ length: 10 }, (_, i) => {
+  const a = -Math.PI / 2 + (i * Math.PI) / 5, d = i % 2 ? r : R;
+  return `${(cx + d * Math.cos(a)).toFixed(1)},${(cy + d * Math.sin(a)).toFixed(1)}`;
+}).join(' ');
+
 const clips = {
   paperclip: (id, w, style, metal = GOLD) => `<svg class="clip" aria-hidden="true" viewBox="-2 -2 32 82" width="${w}" height="${Math.round(w * 82 / 32)}" style="${style}"><defs>${metal.replace(/__[gs]/, id)}</defs><path d="${WIRE}" fill="none" stroke="url(#${id})" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  clamp: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="0 0 120 74" width="${w}" height="${Math.round(w * 74 / 120)}" style="${style}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8C3CE"/><stop offset=".6" stop-color="#EE9DAF"/><stop offset="1" stop-color="#D97F94"/></linearGradient></defs><path fill-rule="evenodd" d="M46 2h28a8 8 0 0 1 8 8v28H38V10a8 8 0 0 1 8-8ZM60 8a6.5 6.5 0 1 0 .01 0Z" fill="url(#${id})"/><rect x="4" y="32" width="112" height="30" rx="6" fill="url(#${id})"/><rect x="4" y="58" width="112" height="9" rx="3" fill="#D27A90"/><rect x="10" y="36" width="100" height="3" rx="1.5" fill="#FFFFFF" opacity=".5"/><path d="M44 6h6" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity=".6"/></svg>`,
+  clamp: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="0 0 120 74" width="${w}" height="${Math.round(w * 74 / 120)}" style="${style}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#F6F3EF"/><stop offset="1" stop-color="#E4DED8"/></linearGradient><pattern id="${id}d" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.6" fill="#E46F8A"/><circle cx="10.5" cy="10.5" r="2.6" fill="#E46F8A"/></pattern></defs><g stroke="#E2DCD5" stroke-width="1"><path fill-rule="evenodd" d="${TAB}" fill="url(#${id})"/><rect x="4" y="32" width="112" height="30" rx="6" fill="url(#${id})"/></g><path fill-rule="evenodd" d="${TAB}" fill="url(#${id}d)"/><rect x="4" y="32" width="112" height="30" rx="6" fill="url(#${id}d)"/><rect x="4" y="58" width="112" height="9" rx="3" fill="#DCD5CE"/><rect x="10" y="35" width="100" height="3" rx="1.5" fill="#FFFFFF" opacity=".8"/></svg>`,
+  // a paperclip topped with a puffy silver star (reference photo)
+  star: (id, w, style) => `<svg class="clip" aria-hidden="true" viewBox="-10 -20 48 100" width="${w}" height="${Math.round(w * 100 / 48)}" style="${style}"><defs>${SILVER.replace('__s', id)}<radialGradient id="${id}r" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#DADEE4"/><stop offset="1" stop-color="#9EA6B1"/></radialGradient></defs><path d="${WIRE}" fill="none" stroke="url(#${id})" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="url(#${id}r)" stroke="url(#${id}r)" stroke-width="6" stroke-linejoin="round"/><polygon points="${STAR5(14, 3, 17, 8.5)}" fill="none" stroke="#A9B0BA" stroke-width="1" stroke-linejoin="round" opacity=".6" transform="translate(0 .6)"/><ellipse cx="8" cy="-6" rx="4" ry="2.4" fill="#FFFFFF" opacity=".85" transform="rotate(-30 8 -6)"/><g fill="#8C939D" opacity=".75"><circle cx="10.5" cy="3" r="1.1"/><circle cx="17.5" cy="3" r="1.1"/><circle cx="4" cy="5" r=".8"/><circle cx="24" cy="5" r=".8"/></g><path d="M12.2 6.4q1.8 1.6 3.6 0" fill="none" stroke="#8C939D" stroke-width=".9" stroke-linecap="round" opacity=".75"/></svg>`,
 };
 
 // ---------- small pieces ----------
@@ -47,7 +55,7 @@ function card(c, i, mobile) {
   }
   const sage = i === 2;
   const clip = sage
-    ? clips.paperclip(`sclip${mobile ? 'm' : ''}`, mobile ? 30 : 38, `right: ${mobile ? 44 : 60}px; top: ${mobile ? -28 : -34}px; rotate: -6deg;`, SILVER)
+    ? clips.star(`sclip${mobile ? 'm' : ''}`, mobile ? 58 : 72, `right: ${mobile ? 30 : 44}px; top: ${mobile ? -58 : -72}px; rotate: -6deg;`)
     : clips.paperclip(`pclip${mobile ? 'm' : ''}`, mobile ? 30 : 38, `right: ${mobile ? 44 : 60}px; top: ${mobile ? -28 : -34}px; rotate: 8deg;`);
   return `      <!-- ${c.num} stamp -->
       <div class="sk-card pc pc-stamp${sage ? ' pc-sage' : ''}" style="rotate: ${sage ? -0.8 : -1.4}deg;">
