@@ -4,7 +4,7 @@ UX/UI デザイナー Yuuna Tachihara のポートフォリオサイト。React 
 各ページはデザインキャンバスから書き出した「ボード」（HTML + CSS）をそのまま表示している。
 
 - 公開 URL: https://yuuna-portfolio.vercel.app
-- GitHub: https://github.com/yuunatatihara-droid/yuuna-portfolio （非公開、ブランチ `main`）
+- GitHub: https://github.com/yuunatatihara-droid/yuuna-portfolio （公開、ブランチ `main`）
 - Vercel は `main` への push で自動デプロイ（反映まで約15秒）。Vercel CLI は PC 名が日本語のため使えない（ByteString エラー）。デプロイは必ず GitHub 経由。
 
 ## ユーザーについて・進め方
