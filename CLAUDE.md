@@ -30,6 +30,7 @@ npm.cmd run build
 - PowerShell の実行ポリシーで `npm` が止まるので `npm.cmd` を使う。Node は `C:\Program Files\nodejs`。
 - git / gh はインストール済み。git の認証は `gh auth setup-git` で GitHub CLI を使う設定（push 時にサインイン画面が出ないように `GCM_INTERACTIVE=never`）。
 - 元ファイルのバックアップ: `C:\Users\yuuna\Downloads\yuuna-portfolio-backup-2026-10-22`
+- 手元だけにあるブランチ `backup-before-name-removal`（と `refs/original/`）は、名前を消す前の古い履歴。ユーザーの指示でしばらく残している。**絶対に push しない**（`git push` は `main` だけを指定する）。
 
 ## ページとルート（`src/App.jsx`）
 | 日本語 | 英語 | ボード |
