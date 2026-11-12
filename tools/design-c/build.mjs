@@ -198,8 +198,11 @@ function footer(aboutBoard, mobile) {
 }
 
 // ---------- project list for the design C home page ----------
-// The main site's project list (src/boards/home-works(-en).js) on the design C pink: the grid paper
-// turns pink with faint maroon lines, and its bottom fades into the pink footer instead of the sky.
+// The main site's project list (src/boards/home-works(-en).js) in the design C palette. The grid paper
+// is a muted greige-pink (darker and much lower chroma than the hero/footer pink, so white screens,
+// cream app screens and the green notes all separate from it) with faint maroon lines, so the
+// project images and notes stand out; its bottom fades into the pink footer instead of the sky.
+const WORKS_BG = '#EDE0DE';
 async function works(lang) {
   const file = `${OUT}/${lang === 'ja' ? 'home-works' : 'home-works-en'}.js`;
   const src = (await import(pathToFileURL(file).href + '?t=' + Date.now())).default;
@@ -208,7 +211,7 @@ async function works(lang) {
     const b = src[mode];
     const html = rep(b.html,
       'background-color: #E1EBF5; background-image: linear-gradient(rgba(63,134,201,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(63,134,201,0.2) 1px, transparent 1px);',
-      `background-color: ${PINK}; background-image: linear-gradient(rgba(94,23,20,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(94,23,20,0.1) 1px, transparent 1px);`, 1);
+      `background-color: ${WORKS_BG}; background-image: linear-gradient(rgba(94,23,20,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(94,23,20,0.07) 1px, transparent 1px);`, 1);
     out[mode] = { ...b, html, css: b.css + `
 .fade-sky{background-color:${PINK};background-image:none}
 ` };
