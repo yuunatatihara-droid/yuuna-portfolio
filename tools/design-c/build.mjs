@@ -197,6 +197,25 @@ function footer(aboutBoard, mobile) {
   return { width: mobile ? 390 : 1440, css: aboutBoard.css, html };
 }
 
+// ---------- project list for the design C home page ----------
+// The main site's project list (src/boards/home-works(-en).js) on the design C pink: the grid paper
+// turns pink with faint maroon lines, and its bottom fades into the pink footer instead of the sky.
+async function works(lang) {
+  const file = `${OUT}/${lang === 'ja' ? 'home-works' : 'home-works-en'}.js`;
+  const src = (await import(pathToFileURL(file).href + '?t=' + Date.now())).default;
+  const out = {};
+  for (const mode of ['desktop', 'mobile']) {
+    const b = src[mode];
+    const html = rep(b.html,
+      'background-color: #E1EBF5; background-image: linear-gradient(rgba(63,134,201,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(63,134,201,0.2) 1px, transparent 1px);',
+      `background-color: ${PINK}; background-image: linear-gradient(rgba(94,23,20,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(94,23,20,0.1) 1px, transparent 1px);`, 1);
+    out[mode] = { ...b, html, css: b.css + `
+.fade-sky{background-color:${PINK};background-image:none}
+` };
+  }
+  return out;
+}
+
 // ---------- write ----------
 async function write(name, desktop, mobile, note) {
   const body = [['desktop', desktop], ['mobile', mobile]].map(([mode, b]) =>
@@ -211,4 +230,6 @@ for (const lang of ['ja', 'en']) {
   await write(`c-hero${sfx}`, hd, hm, `design C home hero, ${lang}`);
   await write(`c-about${sfx}`, ad, am, `design C About page, ${lang}`);
   await write(`c-footer${sfx}`, footer(ad, false), footer(am, true), `design C footer, ${lang}`);
+  const w = await works(lang);
+  await write(`c-works${sfx}`, w.desktop, w.mobile, `main site's project list on the design C pink, ${lang}`);
 }

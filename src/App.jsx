@@ -20,6 +20,8 @@ import cFooter from './boards/c-footer.js';
 import cHeroEn from './boards/c-hero-en.js';
 import cAboutEn from './boards/c-about-en.js';
 import cFooterEn from './boards/c-footer-en.js';
+import cWorks from './boards/c-works.js';
+import cWorksEn from './boards/c-works-en.js';
 
 // Japanese pages live at the root, English pages under /en.
 const ROUTES = {
@@ -74,14 +76,14 @@ const ROUTES = {
 };
 
 // Design C ("Halftone Menu") version of the Home and About pages, built by tools/design-c/build.mjs.
-// The case studies and the home page's project list are shared with the main site.
+// The case studies are shared with the main site; the project list is the main site's on the design C pink.
 Object.assign(ROUTES, {
   '/c': {
     title: 'Yuuna Tachihara — UX/UI Designer',
     lang: 'ja',
     sections: [
       { id: 'hero', data: cHero },
-      { id: 'works', data: homeWorks },
+      { id: 'works', data: cWorks },
       { id: 'contact', data: cFooter },
     ],
   },
@@ -95,7 +97,7 @@ Object.assign(ROUTES, {
     lang: 'en',
     sections: [
       { id: 'hero', data: cHeroEn },
-      { id: 'works', data: homeWorksEn },
+      { id: 'works', data: cWorksEn },
       { id: 'contact', data: cFooterEn },
     ],
   },
