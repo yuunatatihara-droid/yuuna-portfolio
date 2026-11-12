@@ -2,12 +2,14 @@
 // The current language is a cream segment; the other one links to the same page in that language.
 const INK = '#1F3B24', CREAM = '#F6EFC4';
 
-export function switchMarkup({ lang, enHref, jaHref, mobile }) {
+// `colors` lets another design reuse the switch in its own palette (design C: maroon ink, maroon current segment).
+export function switchMarkup({ lang, enHref, jaHref, mobile, colors = {} }) {
+  const { ink = INK, onBg = CREAM, onInk = INK, font = '' } = colors;
   const seg = mobile
     ? 'box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 36px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none;'
     : 'box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 46px; min-height: 42px; padding: 0 12px; border-radius: 999px; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none;';
-  const on = `${seg} background: ${CREAM}; color: ${INK};`;
-  const off = `${seg} color: ${INK};`;
+  const on = `${seg}${font} background: ${onBg}; color: ${onInk};`;
+  const off = `${seg}${font} color: ${ink};`;
   const item = (code, label, href, name) => code === lang
     ? `<span lang="${code}" aria-current="true" title="${name}" style="${on}">${label}</span>`
     : `<a href="${href}" lang="${code}" hreflang="${code}" aria-label="${code === 'en' ? 'Switch to English' : '日本語に切り替え'}" title="${name}" style="${off}">${label}</a>`;

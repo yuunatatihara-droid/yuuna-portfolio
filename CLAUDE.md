@@ -40,6 +40,9 @@ npm.cmd run build
 | `/works/muse` | `/en/works/muse` | `muse-ja` / `muse-en` |
 | `/works/maplenest` | `/en/works/maplenest` | `maplenest-ja` / `maplenest-en`（**生成ファイル**） |
 
+| `/c` | `/en/c` | デザインC版ホーム: `c-hero(-en)` + `home-works(-en)` + `c-footer(-en)`（**生成ファイル**） |
+| `/c/about` | `/en/c/about` | デザインC版 About: `c-about(-en)`（**生成ファイル**） |
+
 `/works/muse/ja` は旧 URL として残している。未知の URL はその言語のホームを表示。
 
 ## 仕組み
@@ -63,6 +66,7 @@ export default {
 - `tools/about-hero.mjs`: About のヒーロー（レースの上の手紙・封蝋・星、プロフィール写真のピンクの蔓フレーム）を JA/EN・PC/スマホに書き込む。ヒーロー部分と追加 CSS を置き換えるので何度でも再実行できる。文章はボード内の既存の文言を引き継ぐ。
 - `tools/about-skills.mjs`: About の Skills の3枚（01 ピンクの切手、02 ポストカード＋消印、03 セージの切手、それぞれクリップ付き）を同じ要領で書き込む。項目は既存のボードから読み取る。**ハート型や「Postcard」「Love, Yuuna」「YUUNA」など内容に関係ない文字は入れない**（ユーザーの指示）。
 - `tools/about-journey.mjs`: About の My Journey を同じ文房具調に（ピンク／セージのポストカード枠、ミシン目の切手、ストライプのマスキングテープの日付、ピンクの点線のタイムライン、入れ子カードに金のクリップ）。文章には触れない。
+- **デザインC版（`/c`）のボードは手で編集しない。** 元のデザインファイルは `tools/design-c/source`（ピンク×ハーフトーンのトマト、レシート、DotGothic16 / Dela Gothic One）。`node tools/design-c/build.mjs` で生成し、自己紹介・写真・ツール・カフェ写真・Beyond Design の文章はメインサイトの `about(-en).js` から取り込む（メインの About を変えたら再生成する）。日本語版の Skills / My Journey の訳はスクリプト内。実フォントだと名前が広がるので「YUUNA」はデザインより小さく（PC 180px・スマホ 78px）している。ケーススタディとホームの作品一覧はメインサイトと共通。
 - `tools/project-motion.mjs`: ケーススタディのスクロール演出 CSS・reveal 設定・タイトル文字分割（MUSE と Maple Nest で共通）。
 
 ## 演出（現状）
