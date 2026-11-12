@@ -202,6 +202,16 @@ function footer(aboutBoard, mobile) {
 // is a pale, light pink (much softer than the hero/footer pink) with faint maroon lines, so the
 // project images and notes stand out while the page stays pink; its bottom fades into the pink footer.
 const WORKS_BG = '#F6E2E6';
+// Its type follows design C too: display (Bagel Fat One) -> Dela Gothic One, body and script
+// (Zen Maru Gothic, Meow Script) -> DotGothic16. The phone/laptop mockups keep their own app fonts.
+const DISPLAY_FONT = "'Dela Gothic One', 'Hiragino Kaku Gothic StdN', sans-serif";
+function designCType(text) {
+  const out = text
+    .replace(/'Bagel Fat One'[^;"}]*/g, DISPLAY_FONT)
+    .replace(/'(?:Zen Maru Gothic|Meow Script)'[^;"}]*/g, BODY_FONT);
+  if (/Bagel Fat One|Zen Maru Gothic|Meow Script/.test(out)) throw new Error('works: main-site font left over');
+  return out;
+}
 async function works(lang) {
   const file = `${OUT}/${lang === 'ja' ? 'home-works' : 'home-works-en'}.js`;
   const src = (await import(pathToFileURL(file).href + '?t=' + Date.now())).default;
@@ -211,7 +221,7 @@ async function works(lang) {
     const html = rep(b.html,
       'background-color: #E1EBF5; background-image: linear-gradient(rgba(63,134,201,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(63,134,201,0.2) 1px, transparent 1px);',
       `background-color: ${WORKS_BG}; background-image: linear-gradient(rgba(94,23,20,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(94,23,20,0.07) 1px, transparent 1px);`, 1);
-    out[mode] = { ...b, html, css: b.css + `
+    out[mode] = { ...b, html: designCType(html), css: designCType(b.css) + `
 .fade-sky{background-color:${PINK};background-image:none}
 ` };
   }
