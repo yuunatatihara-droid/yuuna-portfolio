@@ -41,7 +41,7 @@ npm.cmd run build
 | `/works/maplenest` | `/en/works/maplenest` | `maplenest-ja` / `maplenest-en`（**生成ファイル**） |
 
 | `/c` | `/en/c` | デザインC版ホーム: `c-hero(-en)` + `c-works(-en)` + `c-footer(-en)`（**生成ファイル**） |
-| `/c/about` | `/en/c/about` | デザインC版 About: `c-about(-en)`（**生成ファイル**） |
+| `/c/about` | `/en/c/about` | デザインC版 About: `c-about(-en)`＝メインの About のレイアウトをデザインCの配色・フォントにしたもの（**生成ファイル**） |
 
 `/works/muse/ja` は旧 URL として残している。未知の URL はその言語のホームを表示。
 

@@ -228,6 +228,72 @@ async function works(lang) {
   return out;
 }
 
+// ---------- About page: the main site's About in the design C palette ----------
+// The page keeps the main site's layout and components (letter on lace with wax seals, vine-framed
+// photo, stamp/postcard skill cards with clips, stationery journey, Beyond Design) and takes design C's
+// colors, type, header, footer and halftone tomatoes. The design file's About supplies the header and
+// footer (already wired to the /c pages).
+const ABOUT_COLORS = {
+  // page and text
+  '#BAD9EE': PINK, '#1F3B24': MAROON, '#2A2A2A': INK, '#2F3A30': INK, '#45453F': INK,
+  '#5B5B55': '#6B3A35', '#4A5A4C': '#6B3A35', '#C2345A': '#D93A2B', '#B32D53': '#D93A2B',
+  // hero: letter title, lace, wax seals, stars, vine, photo mat
+  '#2F5A35': MAROON, '#F3C2CC': '#F28B7E',
+  '#F3CBD2': '#FBF8F2', '#DF9AA9': '#EDB3BE', '#E8B0BC': '#EDB3BE', '#DE97A6': '#EDB3BE',
+  '#F8D5DC': '#F7A497', '#E9A6B5': '#E0564A', '#C77C8F': '#A82A1F',
+  '#DCE7F5': '#FFF7D6', '#A9BEDD': '#EADB97', '#7189B0': '#B8A353',
+  '#7F8C4B': '#F6EFC4', '#A7AE6A': '#FFF7D6', '#5E6B35': '#E2D38E', '#D9DCA6': '#FFFFFF',
+  '#D88C9A': '#D93A2B', '#F6D3D9': '#FFF9F4', '#9FBDAA': '#F7F0D8',
+  // skill cards and journey: tomato stamp, light-blue postcard, kraft stamp (as in design C's cards)
+  '#F2C3CC': '#D93A2B', '#E3A1B0': '#E58A7F', '#F3CDD3': '#E1EBF5',
+  '#BCD5B3': '#EBDAB9', '#9DBD92': '#C9AE7E', '#5E8A5C': '#8A6A3A', '#4E7A4C': '#8A3A0B',
+  '#C9E0C0': '#B7D9A2', '#E46F8A': '#D93A2B',
+};
+const recolor = (t) => t
+  .replace(/#[0-9A-Fa-f]{6}\b/g, (c) => ABOUT_COLORS[c.toUpperCase()] || c)
+  .replace(/rgba\(94,138,92,/g, 'rgba(138,106,58,');
+// Script labels (Meow Script) become small letter-spaced DotGothic16 labels, as in design C.
+const scriptToLabel = (t) => t.replace(/(font-family:\s*)'Meow Script',\s*cursive;(\s*)font-size:\s*(\d+)px/g,
+  (m, a, sp, n) => `${a}${BODY_FONT};${sp}letter-spacing:0.12em;${sp}font-size:${Math.round(n * 0.48)}px`);
+
+// As in design C, each tomato sits half off the nearest side of the page, clear of the content.
+function halftoneFor(cloud, pageWidth) {
+  const style = cloud.match(/style="([^"]*)"/)[1];
+  const w = +cloud.match(/width="(\d+)"/)[1];
+  const d = Math.round(w * 1.1);
+  const get = (k) => { const m = style.match(new RegExp(`(?:^|;)\\s*${k}:\\s*(-?\\d+)px`)); return m ? +m[1] : null; };
+  const left = get('left'), top = get('top');
+  const fromRight = left === null || left + w / 2 > pageWidth / 2;
+  const side = fromRight ? `right: -${Math.round(d * 0.45)}px` : `left: -${Math.round(d * 0.55)}px`;
+  const pos = `${side}; top: ${top}px`;
+  return `<div aria-hidden="true" style="position: absolute; ${pos}; width: ${d}px; height: ${d}px; border-radius: 50%; overflow: hidden; background-image: radial-gradient(circle, #D93A2B 0 47%, transparent 49%); background-size: 12px 12px;"><div style="position: absolute; left: 58%; top: 30%; width: 50%; height: 50%; border-radius: 50%; background-image: radial-gradient(circle, #9E2318 0 62%, transparent 64%); background-size: 12px 12px;"></div></div>`;
+}
+
+async function aboutFromMain(lang, mobile, design) {
+  const main = (await current(lang))[mobile ? 'mobile' : 'desktop'];
+  let html = main.html, css = main.css;
+  const take = (h, re, what) => { const m = h.match(re); if (!m) throw new Error(`about: ${what} not found`); return m[0]; };
+  // design C header and footer
+  html = html.replace(take(html, /<header[\s\S]*?<\/header>/, 'main header'), take(design.html, /<header[\s\S]*?<\/header>/, 'C header'));
+  html = html.replace(take(html, /<footer class="f1"[\s\S]*?<\/footer>/, 'main footer'), take(design.html, /<footer[\s\S]*<\/footer>/, 'C footer'));
+  if (!mobile) html = rep(html, 'width: 1440px; height: 5360px;', 'width: 1440px; height: 5280px;', 1);
+  // clouds -> halftone tomatoes
+  html = html.replace(/<svg class="cloud"[\s\S]*?<\/svg>/g, (c) => halftoneFor(c, mobile ? 390 : 1440));
+  // washi tapes and timeline stops are cream on the pink page
+  css = rep(css, '.jr-tape{background-color:#F2C3CC;', '.jr-tape{background-color:#F6EFC4;', 1);
+  css = rep(css, '.jr-chip{background-color:#F2C3CC;', '.jr-chip{background-color:#F6EFC4;', 1);
+  css = rep(css, '.jr-hdl{border-radius:50%;background:#F2C3CC;', '.jr-hdl{border-radius:50%;background:#FFF9F4;', 1);
+  html = designCType(scriptToLabel(recolor(html)));
+  css = designCType(scriptToLabel(recolor(css)));
+  // Dela Gothic One has a single weight; the main site's Japanese heading rule asks for bold, which
+  // would be faked and smudge the kanji, so the headings stay at the font's own weight.
+  // Dela Gothic One is wider than Bagel Fat One: keep "About me" on one line in the phone letter.
+  if (mobile) css += '\n.lt-h1{font-size:40px}\n';
+  // Japanese headings also break only between words, so "（バンクーバー）" stays on one line.
+  if (lang === 'ja') css += '\n.sk-h,.jr-title,.jr-nest h4,.jr-tape,.jr-chip{font-weight:400}\n.jr-title,.jr-nest h4{word-break:keep-all}\n';
+  return { ...main, html, css };
+}
+
 // ---------- write ----------
 async function write(name, desktop, mobile, note) {
   const body = [['desktop', desktop], ['mobile', mobile]].map(([mode, b]) =>
@@ -238,10 +304,11 @@ async function write(name, desktop, mobile, note) {
 
 for (const lang of ['ja', 'en']) {
   const sfx = lang === 'en' ? '-en' : '';
-  const [hd, hm, ad, am] = await Promise.all([hero(lang, false), hero(lang, true), about(lang, false), about(lang, true)]);
+  const [hd, hm, dd, dm] = await Promise.all([hero(lang, false), hero(lang, true), about(lang, false), about(lang, true)]);
+  const [ad, am] = await Promise.all([aboutFromMain(lang, false, dd), aboutFromMain(lang, true, dm)]);
   await write(`c-hero${sfx}`, hd, hm, `design C home hero, ${lang}`);
-  await write(`c-about${sfx}`, ad, am, `design C About page, ${lang}`);
-  await write(`c-footer${sfx}`, footer(ad, false), footer(am, true), `design C footer, ${lang}`);
+  await write(`c-about${sfx}`, ad, am, `main About page in the design C palette, ${lang}`);
+  await write(`c-footer${sfx}`, footer(dd, false), footer(dm, true), `design C footer, ${lang}`);
   const w = await works(lang);
   await write(`c-works${sfx}`, w.desktop, w.mobile, `main site's project list on the design C pink, ${lang}`);
 }
