@@ -199,10 +199,9 @@ function footer(aboutBoard, mobile) {
 
 // ---------- project list for the design C home page ----------
 // The main site's project list (src/boards/home-works(-en).js) in the design C palette. The grid paper
-// is a muted greige-pink (darker and much lower chroma than the hero/footer pink, so white screens,
-// cream app screens and the green notes all separate from it) with faint maroon lines, so the
-// project images and notes stand out; its bottom fades into the pink footer instead of the sky.
-const WORKS_BG = '#EDE0DE';
+// is a pale, light pink (much softer than the hero/footer pink) with faint maroon lines, so the
+// project images and notes stand out while the page stays pink; its bottom fades into the pink footer.
+const WORKS_BG = '#F6E2E6';
 async function works(lang) {
   const file = `${OUT}/${lang === 'ja' ? 'home-works' : 'home-works-en'}.js`;
   const src = (await import(pathToFileURL(file).href + '?t=' + Date.now())).default;
